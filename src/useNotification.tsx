@@ -14,7 +14,7 @@ export interface NotificationConfig {
   getContainer?: () => HTMLElement;
   motion?: CSSMotionProps | ((placement: Placement) => CSSMotionProps);
   closeIcon?: React.ReactNode;
-  closable?: boolean;
+  closable?: boolean | ({ closeIcon?: React.ReactNode } & React.AriaAttributes);
   maxCount?: number;
   duration?: number;
   /** @private. Config for notification holder style. Safe to remove if refactor */

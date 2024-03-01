@@ -629,4 +629,28 @@ describe('Notification.Basic', () => {
 
     unmount();
   });
+  it('Support aria-* in closable', () => {
+    const { instance } = renderDemo({
+      closable: {
+        closeIcon: 'CloseBtn',
+        'aria-label': 'close',
+        'aria-labelledby': 'close',
+      },
+    });
+
+    act(() => {
+      instance.open({
+        content: <p className="test">1</p>,
+        duration: 0,
+      });
+    });
+
+    expect(document.querySelector('.rc-notification-notice-close').textContent).toEqual('CloseBtn');
+    expect(
+      document.querySelector('.rc-notification-notice-close').getAttribute('aria-label'),
+    ).toEqual('close');
+    expect(
+      document.querySelector('.rc-notification-notice-close').getAttribute('aria-labelledby'),
+    ).toEqual('close');
+  });
 });

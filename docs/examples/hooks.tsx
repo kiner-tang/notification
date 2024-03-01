@@ -5,7 +5,13 @@ import { useNotification } from '../../src';
 import motion from './motion';
 
 export default () => {
-  const [notice, contextHolder] = useNotification({ motion, closable: true });
+  const [notice, contextHolder] = useNotification({
+    motion,
+    closable: {
+      closeIcon: 'x',
+      'aria-label': '关闭',
+    },
+  });
 
   return (
     <>

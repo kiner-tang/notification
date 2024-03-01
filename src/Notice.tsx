@@ -1,11 +1,12 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import pickAttrs from 'rc-util/lib/pickAttrs';
 
 export interface NoticeConfig {
   content?: React.ReactNode;
   duration?: number | null;
   closeIcon?: React.ReactNode;
-  closable?: boolean;
+  closable?: boolean | ({ closeIcon?: React.ReactNode } & React.AriaAttributes);
   className?: string;
   style?: React.CSSProperties;
   /** @private Internal usage. Do not override in your code */
@@ -62,6 +63,19 @@ const Notify = React.forwardRef<HTMLDivElement, NoticeProps & { times?: number }
     }
   }, [duration, hovering, times]);
 
+  // ======================== Closable ========================
+  const closableObj = React.useMemo(() => {
+    if (typeof closable === 'object' && closable !== null) {
+      return closable;
+    }
+    if (closable) {
+      return { closeIcon };
+    }
+    return {};
+  }, [closable, closeIcon]);
+
+  const ariaProps = pickAttrs(closableObj, true);
+
   // ======================== Render ========================
   const noticePrefixCls = `${prefixCls}-notice`;
 
@@ -89,13 +103,15 @@ const Notify = React.forwardRef<HTMLDivElement, NoticeProps & { times?: number }
         <a
           tabIndex={0}
           className={`${noticePrefixCls}-close`}
+          aria-label="Close"
+          {...ariaProps}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             onInternalClose();
           }}
         >
-          {closeIcon}
+          {closableObj.closeIcon}
         </a>
       )}
     </div>
